@@ -57,8 +57,8 @@ func (user *User) GetByIdentifier(identifier string, value interface{}) error {
 	return err
 }
 
-func (user *User) GetServices() ([]multauth.ServiceInterface, error) {
-	services := []multauth.ServiceInterface{&AuthenticatorService{}}
+func (user *User) GetServices() ([]multauth.UserServiceInterface, error) {
+	services := []multauth.UserServiceInterface{&UserAuthenticatorService{}}
 
 	query, _, _ := goqu.
 		From("user_service_authenticator").
@@ -96,15 +96,15 @@ func (user *User) Save(fields ...[]string) error {
 	return err
 }
 
-type AuthenticatorService struct {
-	multauth.AuthenticatorService
+type UserAuthenticatorService struct {
+	multauth.UserAuthenticatorService
 	db *sqlx.DB
 
 	Id     int64 `db:"id" json:"id" goqu:"skipinsert"`
 	UserId int64 `db:"user_id" json:"id"`
 }
 
-func (service *AuthenticatorService) Save(fields ...[]string) error {
+func (service *UserAuthenticatorService) Save(fields ...[]string) error {
 	var query string
 
 	if service.Id == 0 {
@@ -139,7 +139,7 @@ func init() {
 	user.Save()
 
 	// Seed user service
-	service := &AuthenticatorService{db: db, UserId: user.Id}
+	service := &UserAuthenticatorService{db: db, UserId: user.Id}
 	service.Init(map[string]interface{}{"Issuer": "Multauth", "AccountName": user.Username})
 	service.Save()
 }
@@ -162,7 +162,7 @@ func main() {
 
 		err := auth.Authenticate(map[string]interface{}{
 			"Username": data["username"],
-			"Email":    data["email"],
+			"Email": data["email"],
 			"Password": data["password"],
 			"Passcode": data["passcode"],
 		}, user)
@@ -170,12 +170,12 @@ func main() {
 		if err == nil {
 			c.JSON(200, gin.H{
 				"message": "Welcome " + user.Username,
-				"token":   "YOUR_JWT_TOKEN",
+				"token": "YOUR_JWT_TOKEN",
 			})
 		} else {
 			c.JSON(401, gin.H{
 				"message": "I don't know you",
-				"error":   err,
+				"error": err,
 			})
 		}
 	})

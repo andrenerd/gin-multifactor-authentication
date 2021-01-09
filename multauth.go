@@ -4,7 +4,6 @@ import (
 	_ "fmt"
 	"errors"
 	"reflect"
-	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,19 +15,14 @@ const (
 	HARDCODE = "Hardcode"
 )
 
-const (
-	DEFAULT_ISSUER  = "Multauth"
-	DEFAULT_ACCOUNT = "Me"
-)
-
 type UserInterface interface {
 	SetPassword(value string) error
 	CheckPassword(value string) bool
 
 	// Should be implemented by app
 	GetByIdentifier(identifier string, value interface{}) error // or Get or AuthGet or AuthGetByIdentifier?
-	GetServices() ([]ServiceInterface, error)               // or AuthGetServices? // todo: how about extra params to load specific services?
-	Save(fields ...[]string) error                              // or AuthSave?
+	GetUserServices() ([]UserServiceInterface, error) // or AuthGetUserServices? // todo: how about extra params to load specific services?
+	Save(fields ...[]string) error // or AuthSave?
 }
 
 type User struct {
@@ -55,7 +49,7 @@ func (user *User) GetByIdentifier(identifier string, value interface{}) error {
 	return errors.New("Not implemented")
 }
 
-func (user *User) GetServices() ([]ServiceInterface, error) {
+func (user *User) GetUserServices() ([]UserServiceInterface, error) {
 	return nil, errors.New("Not implemented")
 }
 
@@ -63,7 +57,7 @@ func (user *User) Save(fields ...[]string) error {
 	return errors.New("Not implemented")
 }
 
-type ServiceInterface interface {
+type UserServiceInterface interface {
 	Init(data map[string]interface{}) error
 	SetPasscode() error
 	CheckPasscode(value string) bool
@@ -75,64 +69,35 @@ type ServiceInterface interface {
 	Save(fields ...[]string) error // or AuthSave?
 }
 
-type Service struct {
+type UserService struct {
 }
 
-func (service *Service) SetPasscode() error {
-	return errors.New("Not implemented")
-}
-
-func (service *Service) CheckPasscode(value string) bool {
-	return false
-}
-
-func (service *Service) SetHardcode(value string) error {
-	return errors.New("Not implemented")
-}
-
-func (service *Service) CheckHardcode(value string) bool {
-	return false
-}
-
-func (service *Service) Verify() error {
-	return errors.New("Not implemented")
-}
-
-func (service *Service) Save(fields ...[]string) error {
-	return errors.New("Not implemented")
-}
-
-type AuthenticatorService struct {
-	Service
-	Key string `db:"key" json:"key"`
-}
-
-func (service *AuthenticatorService) Init(data map[string]interface{}) error {
-	issuer, issuerOk := data["Issuer"].(string)
-	if !issuerOk {
-		issuer = DEFAULT_ISSUER
-	}
-
-	account, accountOk := data["AccountName"].(string)
-	if !accountOk {
-		account = DEFAULT_ACCOUNT
-	}
-
-	key, err := totp.Generate(totp.GenerateOpts{
-		Issuer:      issuer,
-		AccountName: account,
-	})
-
-	if err != nil {
-		return errors.New("Error")
-	}
-
-	service.Key = key.Secret()
+func (service *UserService) Init() error {
 	return nil
 }
 
-func (service AuthenticatorService) CheckPasscode(value string) bool {
-	return totp.Validate(value, service.Key)
+func (service *UserService) SetPasscode() error {
+	return errors.New("Not implemented")
+}
+
+func (service *UserService) CheckPasscode(value string) bool {
+	return false
+}
+
+func (service *UserService) SetHardcode(value string) error {
+	return errors.New("Not implemented")
+}
+
+func (service *UserService) CheckHardcode(value string) bool {
+	return false
+}
+
+func (service *UserService) Verify() error {
+	return errors.New("Not implemented")
+}
+
+func (service *UserService) Save(fields ...[]string) error {
+	return errors.New("Not implemented")
 }
 
 type Auth struct {
@@ -144,7 +109,7 @@ func (auth Auth) CheckPassword(value string, user UserInterface) bool {
 }
 
 func (auth Auth) CheckPasscode(value string, user UserInterface) bool {
-	services, err := user.GetServices()
+	services, err := user.GetUserServices()
 	if err != nil {
 		return false
 	}
@@ -159,7 +124,7 @@ func (auth Auth) CheckPasscode(value string, user UserInterface) bool {
 }
 
 func (auth Auth) CheckHardcode(value string, user UserInterface) bool {
-	services, err := user.GetServices()
+	services, err := user.GetUserServices()
 	if err != nil {
 		return false
 	}
