@@ -20,7 +20,7 @@ type UserInterface interface {
 	CheckPassword(value string) bool
 
 	// Should be implemented by app
-	GetByIdentifier(identifier string, value interface{}) error // or Get or AuthGet or AuthGetByIdentifier?
+	Get(fields map[string]interface{}) error // or AuthGet?
 	GetUserServices() ([]UserServiceInterface, error) // or AuthGetUserServices? // todo: how about extra params to load specific services?
 	Save(fields ...[]string) error // or AuthSave?
 }
@@ -45,7 +45,7 @@ func (user *User) CheckPassword(value string) bool {
 	return err == nil
 }
 
-func (user *User) GetByIdentifier(identifier string, value interface{}) error {
+func (user *User) Get(fields map[string]interface{}) error {
 	return errors.New("Not implemented")
 }
 
@@ -181,7 +181,7 @@ func (auth Auth) Authenticate(data map[string]interface{}, user UserInterface, f
 		flowIdentifier := flow[0]
 
 		if v, ok := data[flowIdentifier]; ok {
-			if err := user.GetByIdentifier(flowIdentifier, v); err != nil {
+			if err := user.Get(map[string]interface{}{flowIdentifier: v}); err != nil {
 				return errors.New("Error")
 			}
 
