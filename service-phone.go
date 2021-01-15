@@ -1,8 +1,8 @@
 package multauth
 
 import (
-	"errors"
-	"github.com/pquerna/otp/totp"
+	_ "errors"
+	_ "github.com/pquerna/otp/totp"
 )
 
 type UserPhoneService struct {

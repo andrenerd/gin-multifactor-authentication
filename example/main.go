@@ -39,20 +39,22 @@ type User struct {
 	Email    string `db:"email" json:"email"`
 }
 
-func (user *User) GetByIdentifier(identifier string, value interface{}) error {
+func (user *User) Get(fields map[string]interface{}) error {
 	t := reflect.TypeOf(*user)
-	f, _ := t.FieldByName(identifier)
+	gq := goqu.From("user")
 
-	dbField, ok := f.Tag.Lookup("db")
-	if !ok {
-		dbField = identifier
+	for key, v := range fields {
+		f, _ := t.FieldByName(key)
+
+		dbField, ok := f.Tag.Lookup("db")
+		if !ok {
+			dbField = key
+		}
+
+		gq = gq.Where(goqu.Ex{dbField: v})
 	}
 
-	query, _, _ := goqu.
-		From("user").
-		Where(goqu.Ex{dbField: value}).
-		ToSQL()
-
+	query, _, _ := gq.ToSQL()
 	err := user.db.Get(user, query)
 	return err
 }
