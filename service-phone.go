@@ -35,3 +35,7 @@ func (service *UserPhoneService) SetPasscode() error {
 	service.Passcode = passcode
 	return nil
 }
+
+func (service UserPhoneService) CheckPasscode(value string) bool {
+	return service.Passcode == value
+}
