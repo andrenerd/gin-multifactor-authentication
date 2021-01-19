@@ -1,15 +1,15 @@
 package multauth
 
 import (
-	_ "fmt"
 	"strings"
 	"errors"
 )
 
 type UserPhoneService struct {
 	UserService
-	Provider UserServiceProviderInterface
+	Provider UserServiceProviderInterface `db:"-"`
 
+	Phone string `db:"phone" json:"phone"`
 	Passcode string `db:"passcode" json:"passcode"`
 }
 
@@ -29,10 +29,17 @@ func (service *UserPhoneService) SetPasscode() error {
 		length = DEFAULT_SERVICE_LENGTH
 	}
 
+	if service.Phone == "" {
+		return errors.New("Error")
+	}
+
 	passcode, err := generateOTP(length)
 	if err != nil {
 		return errors.New("Error")
 	}
+
+	errSend := service.Provider.Send(service.Phone, passcode)
+	if errSend != nil { return errSend }
 
 	service.Passcode = passcode
 	return nil
