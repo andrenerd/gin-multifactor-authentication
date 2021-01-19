@@ -1,5 +1,5 @@
 package multauth
 
 type UserServiceProviderInterface interface {
-	Send() error
+	Send(to string, message string) error
 }

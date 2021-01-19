@@ -8,6 +8,8 @@ import (
 
 type UserPhoneService struct {
 	UserService
+	Provider UserServiceProviderInterface
+
 	Passcode string `db:"passcode" json:"passcode"`
 }
 

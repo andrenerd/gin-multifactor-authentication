@@ -57,49 +57,6 @@ func (user *User) Save(fields ...[]string) error {
 	return errors.New("Not implemented")
 }
 
-type UserServiceInterface interface {
-	Init(data map[string]interface{}) error
-	SetPasscode() error
-	CheckPasscode(value string) bool
-	SetHardcode(value string) error
-	CheckHardcode(value string) bool
-
-	// Should be implemented by app
-	// Get() error // or AuthGet?
-	Save(fields ...[]string) error // or AuthSave?
-}
-
-type UserService struct {
-}
-
-func (service *UserService) Init() error {
-	return nil
-}
-
-func (service *UserService) SetPasscode() error {
-	return errors.New("Not implemented")
-}
-
-func (service *UserService) CheckPasscode(value string) bool {
-	return false
-}
-
-func (service *UserService) SetHardcode(value string) error {
-	return errors.New("Not implemented")
-}
-
-func (service *UserService) CheckHardcode(value string) bool {
-	return false
-}
-
-func (service *UserService) Verify() error {
-	return errors.New("Not implemented")
-}
-
-func (service *UserService) Save(fields ...[]string) error {
-	return errors.New("Not implemented")
-}
-
 type Auth struct {
 	Flows []Flow
 }
