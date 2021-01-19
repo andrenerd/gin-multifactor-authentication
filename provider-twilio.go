@@ -25,9 +25,13 @@ type UserTwilioServiceProvider struct {
 
 // todo: make as goroutine?
 func (provider UserTwilioServiceProvider) Send(to string, message string) error {
+	from := provider.From
+	if !strings.HasPrefix(from, "+") { from = "+" + from }
+	if !strings.HasPrefix(to, "+") { to = "+" + to }
+
 	v := url.Values{}
 	v.Set("To", to)
-	v.Set("From", provider.From)
+	v.Set("From", from)
 	v.Set("Body", message)
 	vReader := *strings.NewReader(v.Encode())
 
