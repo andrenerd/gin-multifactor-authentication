@@ -5,11 +5,6 @@ import (
 	"github.com/pquerna/otp/totp"
 )
 
-const (
-	DEFAULT_ISSUER  = "Multauth"
-	DEFAULT_ACCOUNT = "Me"
-)
-
 type UserAuthenticatorService struct {
 	UserService
 	Key string `db:"key" json:"key"`
@@ -18,12 +13,12 @@ type UserAuthenticatorService struct {
 func (service *UserAuthenticatorService) Init(data map[string]interface{}) error {
 	issuer, issuerOk := data["Issuer"].(string)
 	if !issuerOk {
-		issuer = DEFAULT_ISSUER
+		issuer = DEFAULT_SERVICE_ISSUER
 	}
 
-	account, accountOk := data["AccountName"].(string)
+	account, accountOk := data["Account"].(string)
 	if !accountOk {
-		account = DEFAULT_ACCOUNT
+		account = DEFAULT_SERVICE_ACCOUNT
 	}
 
 	key, err := totp.Generate(totp.GenerateOpts{
