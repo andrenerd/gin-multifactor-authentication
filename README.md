@@ -10,7 +10,7 @@ Flexible authentication for web, mobile, desktop and hybrid apps. Can be used fo
 
 Full list of supported services (devices):
 - Email (soon)
-- Phone (as Sms) (soon)
+- Phone (as Sms)
 - WhatsApp (soon)
 - Google Authenticator
 - Microsoft Authenticator
@@ -19,7 +19,7 @@ Full list of supported services (devices):
 - ...add yours
 
 and service providers:  
-- Twilio (soon)
+- Twilio
 - Vonage (Nexmo) (soon)
 - Amazon SNS (soon)
 - ...add yours
