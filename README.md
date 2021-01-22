@@ -23,3 +23,38 @@ and service providers:
 - Vonage (Nexmo) (soon)
 - Amazon SNS (soon)
 - ...add yours
+
+
+
+### Usage
+See an example app in the `/example` folder.
+
+
+```
+// Init with specific flow(s):
+// authenticate user if all (username, password, passcode) params are valid
+auth := multauth.Auth{
+        Flows: []multauth.Flow{{"Username", "Password", "Passcode"}},
+}
+
+app := gin.Default()
+
+app.POST("/signin", func(c *gin.Context) {
+        // ...Grab params from the context in store in the "data" map
+
+        err := auth.Authenticate(map[string]interface{}{
+                "Username": data["username"],
+                "Password": data["password"],
+                "Passcode": data["passcode"], // with Google Authenticator or so
+        }, user)
+
+        if err == nil {
+                c.JSON(200, gin.H{
+                        "message": "Welcome " + user.Username,
+                        "token": "YOUR_JWT_TOKEN",
+                })
+        }
+})
+
+app.Run()
+```
