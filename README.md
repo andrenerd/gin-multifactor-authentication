@@ -40,7 +40,7 @@ auth := multauth.Auth{
 app := gin.Default()
 
 app.POST("/signin", func(c *gin.Context) {
-        // ...Grab params from the context in store in the "data" map
+        // ...Grab params from the context and store them in the "data" map
 
         err := auth.Authenticate(map[string]interface{}{
                 "Username": data["username"],
