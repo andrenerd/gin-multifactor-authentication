@@ -1,25 +1,34 @@
 package multauth
 
 import (
-	"errors"
-	"strings"
 	"net/smtp"
 )
 
 const (
-	// URL_BASE = "https://api.twilio.com/2010-04-01/Accounts/"
-	// URL_MESSAGES = "/Messages.json"
-	// HEADER_CONTENT_TYPE = "application/x-www-form-urlencoded"
-	// HEADER_ACCEPT = "application/json"
+	// reserved
 )
 
 type UserSmtpServiceProvider struct {
 	Host string
 	Port string
-	// From string
-	// Password string
+	From string
+	Password string
 }
 
 func (provider UserSmtpServiceProvider) Send(to string, message string) error {
-	return nil
+	auth := smtp.PlainAuth("", provider.From, provider.Password, provider.Host)
+
+	err := smtp.SendMail(
+		provider.Host + ":" + provider.Port,
+		auth,
+		provider.From,
+		[]string{to},
+		[]byte(message),
+	)
+
+	if (err == nil) {
+		return nil
+	} else {
+		return err // experimental
+	}
 }
