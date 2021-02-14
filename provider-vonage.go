@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	URL_BASE = "https://rest.nexmo.com/sms/json"
 )
 
 var client = &http.Client{}
