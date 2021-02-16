@@ -16,6 +16,7 @@ var client = &http.Client{}
 
 type UserVonageServiceProvider struct {
 	Key string
+	Secret string
 }
 
 // todo: make as goroutine?
