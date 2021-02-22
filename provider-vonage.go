@@ -24,7 +24,7 @@ type sendBody struct {
 	APIKey string `json:"api_key"`
 	APISecret string `json:"api_secret"`
 	From string `json:"from"`
-	// Text string `json:"text"`
+	Text string `json:"text"`
 	// To string `json:"to"`
 }
 
