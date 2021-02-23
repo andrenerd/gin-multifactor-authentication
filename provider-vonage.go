@@ -25,7 +25,7 @@ type sendBody struct {
 	APISecret string `json:"api_secret"`
 	From string `json:"from"`
 	Text string `json:"text"`
-	// To string `json:"to"`
+	To string `json:"to"`
 }
 
 // todo: make as goroutine?
