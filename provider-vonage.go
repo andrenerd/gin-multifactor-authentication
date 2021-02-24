@@ -31,7 +31,7 @@ type sendBody struct {
 // todo: make as goroutine?
 func (provider UserVonageServiceProvider) Send(to string, message string) error {
 	body := sendBody{
-		// APIKey: Key,
+		APIKey: Key,
 		// APISecret: Secret,
 		// From: provider.From,
 		// To: to,
