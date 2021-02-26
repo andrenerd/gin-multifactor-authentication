@@ -34,7 +34,7 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 		APIKey: Key,
 		APISecret: Secret,
 		From: provider.From,
-		// To: to,
+		To: to,
 		// Text: message,
 	}
 
