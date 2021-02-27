@@ -35,7 +35,7 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 		APISecret: Secret,
 		From: provider.From,
 		To: to,
-		// Text: message,
+		Text: message,
 	}
 
 	return nil
