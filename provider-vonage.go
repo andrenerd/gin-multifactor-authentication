@@ -38,5 +38,10 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 		Text: message,
 	}
 
+	jsonBody, err := json.Marshal(body)
+	// if err != nil {
+	// 	return err
+	// }
+
 	return nil
 }
