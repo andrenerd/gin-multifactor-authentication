@@ -2,7 +2,7 @@ package multauth
 
 import (
 	"errors"
-	"strings"
+	"bytes"
 	"net/url"
 	"net/http"
 	"encoding/json"
@@ -42,6 +42,11 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 	if err != nil {
 		return err
 	}
+
+	res, err := http.Post(URL_BASE, "application/json", bytes.NewBuffer(jsonBody))
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
