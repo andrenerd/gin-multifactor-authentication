@@ -48,5 +48,18 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 		return err
 	}
 
-	return nil
+	defer res.Body.Close()
+	if (res.StatusCode >= 200 && res.StatusCode < 300) {
+		decoder := json.NewDecoder(res.Body)
+		err := decoder.Decode(&map[string]interface{}{})
+
+		if (err == nil) {
+			return nil
+		} else {
+			return err // experimental
+		}
+
+	} else {
+		return errors.New(res.Status) // experimental
+	}
 }
