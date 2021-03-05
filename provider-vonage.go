@@ -44,9 +44,9 @@ func (provider UserVonageServiceProvider) Send(to string, message string) error 
 	}
 
 	res, err := http.Post(URL_BASE, "application/json", bytes.NewBuffer(jsonBody))
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

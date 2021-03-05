@@ -41,6 +41,9 @@ func (provider UserTwilioServiceProvider) Send(to string, message string) error 
 	req.Header.Add("Accept", HEADER_ACCEPT)
 
 	res, _ := client.Do(req)
+	if err != nil {
+		return err
+	}
 
 	if (res.StatusCode >= 200 && res.StatusCode < 300) {
 		decoder := json.NewDecoder(res.Body)
